@@ -1,10 +1,10 @@
 FKTabBarController
 ==================
-FKTabBarController, is intended to change the tabbar and items instead of UITabBarController
+FKTabBarController is intended to change the tabbar and items instead of UITabBarController
 
 ![FKTabBarController screenshot](https://raw.github.com/chion/FKTabBarController/master/Demo/screenshot.png "Screenshot")
 
-## Example Usage
+### Example Usage
 
 ```objective-c
 FKTabBarController *tabBarController = [[FKTabBarController alloc]initWithNibName:nil bundle:nil];
@@ -21,6 +21,6 @@ for (int i=0; i<4; i++) {
 [tabBarController setViewControllers:viewControllers items:items];
 ```
 
-## License
+### License
 
 FKTabBarController is available under the MIT license.
