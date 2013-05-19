@@ -2,6 +2,8 @@ FKTabBarController
 ==================
 FKTabBarController, is intended to change the tabbar and items instead of UITabBarController
 
+![FKTabBarController screenshot](https://raw.github.com/chion/FKTabBarController/master/Demo/screenshot.png "Screenshot")
+
 ## Example Usage
 
 ```objective-c
