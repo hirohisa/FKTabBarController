@@ -95,7 +95,7 @@
         [self reselect:YES];
     }
     _selectedIndex = selectedIndex;
-    [self updateLayout];
+    [self switchViewController];
 }
 
 - (void)setViewControllers:(NSArray *)viewControllers
@@ -167,7 +167,7 @@
 - (void)initialize
 {
     [self.view addSubview:self.tabBar];
-    [self updateLayout];
+    [self switchViewController];
 }
 
 - (void)switchViewController
