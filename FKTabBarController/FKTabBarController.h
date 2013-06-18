@@ -21,4 +21,5 @@
 @property (nonatomic, readonly) UIViewController *selectedViewController;
 @property (nonatomic) NSInteger selectedIndex;
 - (void)setViewControllers:(NSArray *)viewControllers items:(NSArray *)items;
+- (void)switchViewController;
 @end

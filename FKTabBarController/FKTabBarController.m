@@ -167,7 +167,7 @@
     [self updateLayout];
 }
 
-- (void)updateLayout
+- (void)switchViewController
 {
     for (int i=0; i<[self.buttons count]; i++) {
         UIButton *button = [self.buttons objectAtIndex:i];
