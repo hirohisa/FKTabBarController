@@ -73,6 +73,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.tabBar.frame = CGRectMake(0., 0., CGRectGetWidth(self.view.bounds), 50);
+    CGFloat height = CGRectGetHeight(self.view.bounds)-(CGRectGetHeight(self.tabBar.bounds)/2);
+    self.tabBar.center = CGPointMake(self.view.center.x, height);
 }
 
 - (void)didReceiveMemoryWarning
