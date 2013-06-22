@@ -78,11 +78,6 @@
     self.tabBar.center = CGPointMake(self.view.center.x, height);
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
-
 #pragma mark - setter/getter
 - (UIViewController *)selectedViewController
 {
@@ -93,9 +88,11 @@
 {
     if (_selectedIndex == selectedIndex) {
         [self reselect:YES];
+    } else {
+        _selectedIndex = selectedIndex;
+        [self switchViewController];
     }
-    _selectedIndex = selectedIndex;
-    [self switchViewController];
+    [self switchSelectedButton];
 }
 
 - (void)setViewControllers:(NSArray *)viewControllers
@@ -170,12 +167,17 @@
     [self switchViewController];
 }
 
-- (void)switchViewController
+- (void)switchSelectedButton
 {
     for (int i=0; i<[self.buttons count]; i++) {
         UIButton *button = [self.buttons objectAtIndex:i];
         [button setSelected:(i == self.selectedIndex)];
     }
+    [self.view bringSubviewToFront:self.tabBar];
+}
+
+- (void)switchViewController
+{
     for (UIViewController *viewController in self.viewControllers) {
         if (![viewController isEqual:self.selectedViewController]) {
             [viewController.view removeFromSuperview];
@@ -188,7 +190,6 @@
             [self addChildViewController:self.selectedViewController];
         }
     }
-    [self.view bringSubviewToFront:self.tabBar];
     [self.view insertSubview:self.selectedViewController.view belowSubview:self.tabBar];
 }
 @end
