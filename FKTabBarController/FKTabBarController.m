@@ -181,7 +181,9 @@
     for (UIViewController *viewController in self.viewControllers) {
         if (![viewController isEqual:self.selectedViewController]) {
             [viewController.view removeFromSuperview];
-            [viewController removeFromParentViewController];
+            if ([viewController respondsToSelector:@selector(removeFromParentViewController)]) {
+                [viewController removeFromParentViewController];
+            }
         }
     }
     if (self.selectedViewController != nil) {
