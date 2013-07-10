@@ -15,11 +15,15 @@
 - (id)initWithIcon:(UIImage *)icon selectedColor:(UIColor *)selectedColor unselectedColor:(UIColor *)unselectedColor;
 @end
 
-@interface FKTabBarController : UIViewController
-@property (nonatomic, readonly) NSArray *viewControllers;
-@property (nonatomic, readonly) UIView *tabBar;
-@property (nonatomic, readonly) UIViewController *selectedViewController;
+@interface FKTabBar : UIView
+@property (nonatomic, readonly) FKTabBarItem *selectedItem;
 @property (nonatomic) NSInteger selectedIndex;
-- (void)setViewControllers:(NSArray *)viewControllers items:(NSArray *)items;
-- (void)switchViewController;
+@property (nonatomic, strong) NSArray *items;
+@end
+
+@interface FKTabBarController : UIViewController
+@property (nonatomic, strong) NSArray *viewControllers;
+@property (nonatomic, readonly) FKTabBar *tabBar;
+@property (nonatomic, readonly) UIViewController *selectedViewController;
+- (void)switchViewControllers;
 @end

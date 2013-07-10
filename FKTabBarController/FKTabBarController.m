@@ -54,8 +54,78 @@
 }
 @end
 
-@interface FKTabBarController ()
+@interface FKTabBarController (FKTabBar)
+- (void)reselect:(BOOL)animated;
+@end
+
+@interface FKTabBar ()
 @property (nonatomic, strong) NSArray *buttons;
+@property (nonatomic) FKTabBarController *delegate;
+@end
+
+@implementation FKTabBar
+
+- (void)setItems:(NSArray *)items
+{
+    _items = items;
+    NSMutableArray *buttons = @[].mutableCopy;
+    for (int i=0; i<[self.items count]; i++) {
+        FKTabBarItem *item = [self.items objectAtIndex:i];
+        UIButton *button = [[UIButton alloc]initWithFrame:CGRectZero];
+        [button setImage:item.icon forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageWithColor:item.unselectedColor] forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateSelected];
+        [button addTarget:self action:@selector(push:) forControlEvents:UIControlEventTouchDown];
+        [self addSubview:button];
+        [buttons addObject:button];
+    }
+    self.buttons = buttons;
+}
+
+- (void)setSelectedIndex:(NSInteger)selectedIndex
+{
+    if (_selectedIndex == selectedIndex) {
+        [self.delegate reselect:YES];
+    } else {
+        _selectedIndex = selectedIndex;
+        [self.delegate switchViewControllers];
+    }
+    [self switchButtons];
+}
+
+- (void)push:(id)sender
+{
+    NSInteger index = 0;
+    for (int i=0; i<[self.buttons count]; i++) {
+        UIButton *button = [self.buttons objectAtIndex:i];
+        if ([button isEqual:sender]) {
+            index = i;
+        }
+    }
+    self.selectedIndex = index;
+}
+
+- (void)switchButtons
+{
+    for (int i=0; i<[self.buttons count]; i++) {
+        UIButton *button = [self.buttons objectAtIndex:i];
+        [button setSelected:(i == self.selectedIndex)];
+    }
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGFloat width = CGRectGetWidth(self.bounds)/(([self.buttons count] > 0)?[self.buttons count]:1);
+    CGFloat height = CGRectGetHeight(self.bounds);
+    for (int i=0; i<[self.buttons count]; i++) {
+        UIButton *button = (UIButton *)[self.buttons objectAtIndex:i];
+        button.frame = CGRectMake(0 + width*i, 0, width, height);
+    }
+}
+@end
+
+@interface FKTabBarController ()
 @end
 
 @implementation FKTabBarController
@@ -65,7 +135,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.selectedIndex = 0;
     }
     return self;
 }
@@ -81,78 +150,31 @@
 #pragma mark - setter/getter
 - (UIViewController *)selectedViewController
 {
-    return [self.viewControllers objectAtIndex:self.selectedIndex];
-}
-
-- (void)setSelectedIndex:(NSInteger)selectedIndex
-{
-    if (_selectedIndex == selectedIndex) {
-        [self reselect:YES];
-    } else {
-        _selectedIndex = selectedIndex;
-        [self switchViewController];
-    }
-    [self switchSelectedButton];
+    return [self.viewControllers objectAtIndex:self.tabBar.selectedIndex];
 }
 
 - (void)setViewControllers:(NSArray *)viewControllers
 {
     _viewControllers = viewControllers;
+    for (UIViewController *viewController in viewControllers) {
+        if ([[viewController class] isSubclassOfClass:[UINavigationController class]]) {
+            [(UINavigationController *)viewController setTabBarController:self];
+        }
+    }
     [self initialize];
 }
 
 - (UIView *)tabBar
 {
     if (_tabBar == nil) {
-        _tabBar = [[UIView alloc]initWithFrame:CGRectZero];
+        _tabBar = [[FKTabBar alloc]initWithFrame:CGRectZero];
+        _tabBar.delegate = self;
+        _tabBar.selectedIndex = 0;
     }
     return _tabBar;
 }
 
-#pragma mark - public
-- (void)setViewControllers:(NSArray *)viewControllers items:(NSArray *)items
-{
-    [self setItems:items];
-    for (UIViewController *viewController in viewControllers) {
-        if ([[viewController class] isSubclassOfClass:[UINavigationController class]]) {
-            [(UINavigationController *)viewController setTabBarController:self];
-        }
-    }
-    [self setViewControllers:viewControllers];
-}
-
-#pragma mark -
-- (void)setItems:(NSArray *)items
-{
-    NSMutableArray *buttons = @[].mutableCopy;
-    CGFloat width = CGRectGetWidth(self.tabBar.bounds)/(([items count] > 0)?[items count]:1);
-    CGFloat height = CGRectGetHeight(self.tabBar.bounds);
-    for (int i=0; i<[items count]; i++) {
-        FKTabBarItem *item = [items objectAtIndex:i];
-        UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0 + width*i, 0, width, height)];
-        [button setImage:item.icon forState:UIControlStateNormal];
-        [button setBackgroundImage:[UIImage imageWithColor:item.unselectedColor] forState:UIControlStateNormal];
-        [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateSelected];
-        [button addTarget:self action:@selector(push:) forControlEvents:UIControlEventTouchDown];
-        [self.tabBar addSubview:button];
-        [buttons addObject:button];
-    }
-    self.buttons = buttons;
-}
-
 #pragma mark - action
-- (void)push:(id)sender
-{
-    NSInteger index = 0;
-    for (int i=0; i<[self.buttons count]; i++) {
-        UIButton *button = [self.buttons objectAtIndex:i];
-        if ([button isEqual:sender]) {
-            index = i;
-        }
-    }
-    self.selectedIndex = index;
-}
-
 - (void)reselect:(BOOL)animated
 {
     if ([[self.selectedViewController class] isSubclassOfClass:[UINavigationController class]]) {
@@ -164,19 +186,10 @@
 - (void)initialize
 {
     [self.view addSubview:self.tabBar];
-    [self switchViewController];
+    [self switchViewControllers];
 }
 
-- (void)switchSelectedButton
-{
-    for (int i=0; i<[self.buttons count]; i++) {
-        UIButton *button = [self.buttons objectAtIndex:i];
-        [button setSelected:(i == self.selectedIndex)];
-    }
-    [self.view bringSubviewToFront:self.tabBar];
-}
-
-- (void)switchViewController
+- (void)switchViewControllers
 {
     for (UIViewController *viewController in self.viewControllers) {
         if (![viewController isEqual:self.selectedViewController]) {
