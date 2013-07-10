@@ -16,8 +16,16 @@
 @property (nonatomic, readonly) UIImage *icon;
 @property (nonatomic, readonly) UIColor *selectedColor;
 @property (nonatomic, readonly) UIColor *unselectedColor;
+@property (nonatomic, readonly) UILabel *badgeLabel;
 @property (nonatomic) NSString *badgeValue;
-- (id)initWithIcon:(UIImage *)icon selectedColor:(UIColor *)selectedColor unselectedColor:(UIColor *)unselectedColor;
+- (id)initWithIcon:(UIImage *)icon
+     selectedColor:(UIColor *)selectedColor
+   unselectedColor:(UIColor *)unselectedColord;
+
+- (id)initWithIcon:(UIImage *)icon
+     selectedColor:(UIColor *)selectedColor
+   unselectedColor:(UIColor *)unselectedColor
+        badgeLabel:(UILabel *)badgeLabel;
 @end
 
 @interface FKTabBar : UIView

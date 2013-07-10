@@ -45,8 +45,14 @@
 @implementation FKTabButton
 - (id)initWithFrame:(CGRect)frame
 {
+    return [self initWithFrame:frame
+                    badgeLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+}
+
+- (id)initWithFrame:(CGRect)frame badgeLabel:(UILabel *)badgeLabel
+{
     if ((self = [super initWithFrame:frame])) {
-        _badgeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _badgeLabel = badgeLabel;
         [self addSubview:self.badgeLabel];
     }
     return self;
@@ -67,6 +73,7 @@
         .y = CGRectGetHeight(self.bounds)/2 -10.
     };
 }
+
 @end
 
 @interface FKTabBarItem ()
@@ -74,12 +81,29 @@
 @end
 
 @implementation FKTabBarItem
-- (id)initWithIcon:(UIImage *)icon selectedColor:(UIColor *)selectedColor unselectedColor:(UIColor *)unselectedColor
+
+- (id)initWithIcon:(UIImage *)icon
+     selectedColor:(UIColor *)selectedColor
+   unselectedColor:(UIColor *)unselectedColor
 {
-    if ((self = [super init])) {
+    UILabel *badgeLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+    badgeLabel.backgroundColor = [UIColor clearColor];
+    return [self initWithIcon:icon
+                selectedColor:selectedColor
+              unselectedColor:unselectedColor
+                   badgeLabel:badgeLabel];
+}
+
+- (id)initWithIcon:(UIImage *)icon
+     selectedColor:(UIColor *)selectedColor
+   unselectedColor:(UIColor *)unselectedColor
+             badgeLabel:(UILabel *)badgeLabel
+{
+    if ((self = [self init])) {
         _icon = icon;
         _selectedColor = selectedColor;
         _unselectedColor = unselectedColor;
+        _badgeLabel = badgeLabel;
     }
     return self;
 }
@@ -90,6 +114,7 @@
         [self.delegate performSelector:@selector(setBadgeValue:) withObject:badgeValue];
     }
 }
+
 @end
 
 @interface FKTabBarController (FKTabBar)
@@ -116,7 +141,8 @@
     _items = items;
     NSMutableArray *buttons = @[].mutableCopy;
     for (FKTabBarItem *item in items) {
-        FKTabButton *button = [[FKTabButton alloc]initWithFrame:CGRectZero];
+        FKTabButton *button = [[FKTabButton alloc]initWithFrame:CGRectZero
+                                                     badgeLabel:item.badgeLabel];
         [button setImage:item.icon forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageWithColor:item.unselectedColor] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateSelected];
