@@ -61,13 +61,16 @@
 - (void)setBadgeValue:(NSString *)badgeValue
 {
     self.badgeLabel.text = badgeValue;
-    [self.badgeLabel sizeToFit];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     self.badgeLabel.hidden = !(self.badgeLabel.text != nil);
+    if (!self.badgeLabel.hidden &&
+        CGRectEqualToRect(self.badgeLabel.bounds, CGRectZero)) {
+        [self.badgeLabel sizeToFit];
+    }
     self.badgeLabel.center = (CGPoint) {
         .x = CGRectGetWidth(self.bounds)/2 +15.,
         .y = CGRectGetHeight(self.bounds)/2 -10.
