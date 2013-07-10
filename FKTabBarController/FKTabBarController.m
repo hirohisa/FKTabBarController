@@ -42,15 +42,11 @@
 }
 @end
 
-@interface FKTabButton : UIButton
-@property (nonatomic) UILabel *badgeLabel;
-@end
-
 @implementation FKTabButton
 - (id)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
-        self.badgeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _badgeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self addSubview:self.badgeLabel];
     }
     return self;
@@ -67,8 +63,8 @@
     [super layoutSubviews];
     self.badgeLabel.hidden = !(self.badgeLabel.text != nil);
     self.badgeLabel.center = (CGPoint) {
-        .x = CGRectGetWidth(self.bounds)/2 +5,
-        .y = CGRectGetHeight(self.bounds)/2 -5
+        .x = CGRectGetWidth(self.bounds)/2 +15.,
+        .y = CGRectGetHeight(self.bounds)/2 -10.
     };
 }
 @end
@@ -184,12 +180,12 @@
 @end
 
 @implementation FKTabBarController
-@synthesize tabBar = _tabBar;
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        _tabBar = [[FKTabBar alloc]initWithFrame:CGRectZero];
+        self.tabBar.delegate = self;
     }
     return self;
 }
@@ -217,15 +213,6 @@
         }
     }
     [self initialize];
-}
-
-- (UIView *)tabBar
-{
-    if (_tabBar == nil) {
-        _tabBar = [[FKTabBar alloc]initWithFrame:CGRectZero];
-        _tabBar.delegate = self;
-    }
-    return _tabBar;
 }
 
 #pragma mark - action

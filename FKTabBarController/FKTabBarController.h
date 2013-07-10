@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@interface FKTabButton : UIButton
+@property (nonatomic, readonly) UILabel *badgeLabel;
+@end
+
 @interface FKTabBarItem : NSObject
 @property (nonatomic, readonly) UIImage *icon;
 @property (nonatomic, readonly) UIColor *selectedColor;
