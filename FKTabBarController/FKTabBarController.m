@@ -65,6 +65,14 @@
 
 @implementation FKTabBar
 
+- (id)initWithFrame:(CGRect)frame
+{
+    if ((self = [super initWithFrame:frame])) {
+        self.selectedIndex = 0;
+    }
+    return self;
+}
+
 - (void)setItems:(NSArray *)items
 {
     _items = items;
@@ -91,6 +99,11 @@
         [self.delegate switchViewControllers];
     }
     [self switchButtons];
+}
+
+- (FKTabBarItem *)selectedItem
+{
+    return [self.items objectAtIndex:self.selectedIndex];
 }
 
 - (void)push:(id)sender
@@ -169,7 +182,6 @@
     if (_tabBar == nil) {
         _tabBar = [[FKTabBar alloc]initWithFrame:CGRectZero];
         _tabBar.delegate = self;
-        _tabBar.selectedIndex = 0;
     }
     return _tabBar;
 }
