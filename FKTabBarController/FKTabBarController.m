@@ -42,6 +42,41 @@
 }
 @end
 
+@interface FKTabButton : UIButton
+@property (nonatomic) UILabel *badgeLabel;
+@end
+
+@implementation FKTabButton
+- (id)initWithFrame:(CGRect)frame
+{
+    if ((self = [super initWithFrame:frame])) {
+        self.badgeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [self addSubview:self.badgeLabel];
+    }
+    return self;
+}
+
+- (void)setBadgeValue:(NSString *)badgeValue
+{
+    self.badgeLabel.text = badgeValue;
+    [self.badgeLabel sizeToFit];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.badgeLabel.hidden = !(self.badgeLabel.text != nil);
+    self.badgeLabel.center = (CGPoint) {
+        .x = CGRectGetWidth(self.bounds)/2 +5,
+        .y = CGRectGetHeight(self.bounds)/2 -5
+    };
+}
+@end
+
+@interface FKTabBarItem ()
+@property (nonatomic) id delegate;
+@end
+
 @implementation FKTabBarItem
 - (id)initWithIcon:(UIImage *)icon selectedColor:(UIColor *)selectedColor unselectedColor:(UIColor *)unselectedColor
 {
@@ -51,6 +86,13 @@
         _unselectedColor = unselectedColor;
     }
     return self;
+}
+
+- (void)setBadgeValue:(NSString *)badgeValue
+{
+    if ([self.delegate respondsToSelector:@selector(setBadgeValue:)]) {
+        [self.delegate performSelector:@selector(setBadgeValue:) withObject:badgeValue];
+    }
 }
 @end
 
@@ -77,17 +119,17 @@
 {
     _items = items;
     NSMutableArray *buttons = @[].mutableCopy;
-    for (int i=0; i<[self.items count]; i++) {
-        FKTabBarItem *item = [self.items objectAtIndex:i];
-        UIButton *button = [[UIButton alloc]initWithFrame:CGRectZero];
+    for (FKTabBarItem *item in items) {
+        FKTabButton *button = [[FKTabButton alloc]initWithFrame:CGRectZero];
         [button setImage:item.icon forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageWithColor:item.unselectedColor] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateSelected];
         [button addTarget:self action:@selector(push:) forControlEvents:UIControlEventTouchDown];
         [self addSubview:button];
         [buttons addObject:button];
+        item.delegate = button;
     }
-    self.buttons = buttons;
+    self.buttons = buttons.copy;
 }
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex

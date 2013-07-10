@@ -12,6 +12,7 @@
 @property (nonatomic, readonly) UIImage *icon;
 @property (nonatomic, readonly) UIColor *selectedColor;
 @property (nonatomic, readonly) UIColor *unselectedColor;
+@property (nonatomic) NSString *badgeValue;
 - (id)initWithIcon:(UIImage *)icon selectedColor:(UIColor *)selectedColor unselectedColor:(UIColor *)unselectedColor;
 @end
 
