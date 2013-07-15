@@ -45,27 +45,28 @@
     DemoTabBarController *tabBarController = [[DemoTabBarController alloc]initWithNibName:nil bundle:nil];
     NSMutableArray *viewControllers = @[].mutableCopy;
     NSMutableArray *items = @[].mutableCopy;
+    NSArray *colors = @[
+                        [UIColor blueColor],
+                        [UIColor purpleColor],
+                        [UIColor redColor],
+                        [UIColor grayColor]
+                        ];
     for (int i=0; i<4; i++) {
-        [viewControllers addObject:[self makeSampleNavigationController]];
+        [viewControllers addObject:[self makeSampleNavigationControllerWithColor:[colors objectAtIndex:i]]];
         [items addObject:[self makeSampleItem]];
     }
-    [tabBarController setViewControllers:viewControllers.copy items:items.copy];
-    /*
-    // UITabBarController
-    UITabBarController *tabBarController = [[UITabBarController alloc]initWithNibName:nil bundle:nil];
-    NSMutableArray *viewControllers = @[].mutableCopy;
-    for (int i=0; i<4; i++) {
-        [viewControllers addObject:[self makeSampleNavigationController]];
-    }
-    [tabBarController setViewControllers:viewControllers.copy];
-    */
+    tabBarController.viewControllers = viewControllers.copy;
+    tabBarController.tabBar.items = items.copy;
     return (DemoTabBarController *)tabBarController;
 }
 
-- (UINavigationController *)makeSampleNavigationController
+- (UINavigationController *)makeSampleNavigationControllerWithColor:(UIColor *)color
 {
-    return [[UINavigationController alloc]
+    UINavigationController *navigationController = [[UINavigationController alloc]
             initWithRootViewController:[[DemoViewController alloc]initWithNibName:nil bundle:nil]];
+    navigationController.navigationBar.tintColor = color;
+
+    return navigationController;
 }
 
 - (FKTabBarItem *)makeSampleItem
