@@ -134,7 +134,7 @@
 - (id)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
-        self.selectedIndex = 0;
+        _selectedIndex = NSNotFound;
     }
     return self;
 }
@@ -155,6 +155,7 @@
         item.delegate = button;
     }
     self.buttons = buttons.copy;
+    [self initialize];
 }
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex
@@ -171,6 +172,15 @@
 - (FKTabBarItem *)selectedItem
 {
     return [self.items objectAtIndex:self.selectedIndex];
+}
+
+- (void)initialize
+{
+    if ([self.delegate.viewControllers count] > 0) {
+        _selectedIndex = 0;
+        [self switchButtons];
+        [self.delegate switchViewControllers];
+    }
 }
 
 - (void)push:(id)sender
@@ -209,14 +219,27 @@
 @end
 
 @implementation FKTabBarController
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        _tabBar = [[FKTabBar alloc]initWithFrame:CGRectZero];
-        self.tabBar.delegate = self;
+    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
+        [self setup];
     }
     return self;
+}
+
+- (id)init
+{
+    if ((self = [super init])) {
+        [self setup];
+    }
+    return self;
+}
+
+- (void)setup
+{
+    _tabBar = [[FKTabBar alloc]initWithFrame:CGRectZero];
+    self.tabBar.delegate = self;
 }
 
 - (void)viewDidLoad
@@ -256,7 +279,7 @@
 - (void)initialize
 {
     [self.view addSubview:self.tabBar];
-    [self switchViewControllers];
+    [self.tabBar initialize];
 }
 
 - (void)switchViewControllers
