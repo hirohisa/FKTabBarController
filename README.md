@@ -18,7 +18,8 @@ for (int i=0; i<4; i++) {
                                           selectedColor:[UIColor blackColor]
                                         unselectedColor:[UIColor grayColor]]];
 }
-[tabBarController setViewControllers:viewControllers items:items];
+tabBarController.viewController = viewController;
+tabBarController.tabBar.items = items;
 ```
 
 ### License
