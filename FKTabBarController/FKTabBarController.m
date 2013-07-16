@@ -279,7 +279,9 @@
 - (void)initialize
 {
     [self.view addSubview:self.tabBar];
-    [self.tabBar initialize];
+    if ([self.tabBar.items count] > 0) {
+        [self.tabBar initialize];
+    }
 }
 
 - (void)switchViewControllers
