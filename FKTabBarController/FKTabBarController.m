@@ -60,6 +60,7 @@
 
 - (void)setBadgeValue:(NSString *)badgeValue
 {
+    if ([badgeValue isEqual:@"0"]) badgeValue = nil;
     self.badgeLabel.text = badgeValue;
 }
 
