@@ -8,6 +8,8 @@
 
 #import "FKTabBarController.h"
 
+static CGFloat const kHideSpeed = .3;
+
 @interface UIImage (FKTabBarController)
 + (UIImage *)imageWithColor:(UIColor *)color;
 @end
@@ -213,6 +215,31 @@
         UIButton *button = (UIButton *)[self.buttons objectAtIndex:i];
         button.frame = CGRectMake(0 + width*i, 0, width, height);
     }
+}
+
+- (void)setHidden:(BOOL)hidden
+{
+    CGRect showFrame = self.frame;
+    CGRect hideFrame = showFrame;
+    hideFrame.origin.y = [[UIScreen mainScreen] bounds].size.height;
+    
+    CGRect before = hidden?showFrame:hideFrame;
+    CGRect after  = hidden?hideFrame:showFrame;
+    
+    if (!hidden) {
+        [super setHidden:hidden];
+        self.frame = hideFrame;
+    }
+    [UIView animateWithDuration:kHideSpeed
+                     animations:^{
+                         self.frame = after;
+                     }
+                     completion:^(BOOL finished) {
+                         if (hidden) {
+                             [super setHidden:hidden];
+                             self.frame = before;
+                         }
+                     }];
 }
 @end
 
