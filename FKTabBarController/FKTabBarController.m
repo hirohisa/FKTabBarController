@@ -220,6 +220,11 @@ static CGFloat const FKTabBarControllerHideSpeed = .3;
 
 - (void)setHidden:(BOOL)hidden
 {
+    [self setHidden:hidden animated:NO];
+}
+
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated
+{
     if (self.hidden == hidden || self.isRunningAnimation) {
         return;
     }
@@ -234,19 +239,26 @@ static CGFloat const FKTabBarControllerHideSpeed = .3;
         [super setHidden:hidden];
         self.frame = hideFrame;
     }
-    self.isRunningAnimation = YES;
-    [UIView animateWithDuration:FKTabBarControllerHideSpeed
-                     animations:^{
-                         self.frame = after;
-                     }
-                     completion:^(BOOL finished) {
-                         self.isRunningAnimation = NO;
-                         if (hidden) {
-                             [super setHidden:hidden];
-                             self.frame = before;
+    
+    if (animated) {
+        self.isRunningAnimation = YES;
+        [UIView animateWithDuration:FKTabBarControllerHideSpeed
+                         animations:^{
+                             self.frame = after;
                          }
-                     }];
+                         completion:^(BOOL finished) {
+                             self.isRunningAnimation = NO;
+                             if (hidden) {
+                                 [super setHidden:hidden];
+                                 self.frame = before;
+                             }
+                         }];
+    } else {
+        self.frame = showFrame;
+        [super setHidden:hidden];
+    }
 }
+
 @end
 
 @interface FKTabBarController ()
