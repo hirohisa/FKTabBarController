@@ -8,7 +8,7 @@
 
 #import "FKTabBarController.h"
 
-static CGFloat const kHideSpeed = .3;
+static CGFloat const FKTabBarControllerHideSpeed = .3;
 
 @interface UIImage (FKTabBarController)
 + (UIImage *)imageWithColor:(UIColor *)color;
@@ -103,7 +103,7 @@ static CGFloat const kHideSpeed = .3;
 - (id)initWithIcon:(UIImage *)icon
      selectedColor:(UIColor *)selectedColor
    unselectedColor:(UIColor *)unselectedColor
-             badgeLabel:(UILabel *)badgeLabel
+        badgeLabel:(UILabel *)badgeLabel
 {
     if ((self = [self init])) {
         _icon = icon;
@@ -128,6 +128,7 @@ static CGFloat const kHideSpeed = .3;
 @end
 
 @interface FKTabBar ()
+@property (nonatomic) BOOL isRunningAnimation;
 @property (nonatomic, strong) NSArray *buttons;
 @property (nonatomic) FKTabBarController *delegate;
 @end
@@ -219,6 +220,9 @@ static CGFloat const kHideSpeed = .3;
 
 - (void)setHidden:(BOOL)hidden
 {
+    if (self.hidden == hidden || self.isRunningAnimation) {
+        return;
+    }
     CGRect showFrame = self.frame;
     CGRect hideFrame = showFrame;
     hideFrame.origin.y = [[UIScreen mainScreen] bounds].size.height;
@@ -230,11 +234,13 @@ static CGFloat const kHideSpeed = .3;
         [super setHidden:hidden];
         self.frame = hideFrame;
     }
-    [UIView animateWithDuration:kHideSpeed
+    self.isRunningAnimation = YES;
+    [UIView animateWithDuration:FKTabBarControllerHideSpeed
                      animations:^{
                          self.frame = after;
                      }
                      completion:^(BOOL finished) {
+                         self.isRunningAnimation = NO;
                          if (hidden) {
                              [super setHidden:hidden];
                              self.frame = before;
