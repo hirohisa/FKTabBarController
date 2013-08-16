@@ -32,6 +32,7 @@
 @property (nonatomic, readonly) FKTabBarItem *selectedItem;
 @property (nonatomic) NSInteger selectedIndex;
 @property (nonatomic, strong) NSArray *items;
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 @end
 
 @interface FKTabBarController : UIViewController

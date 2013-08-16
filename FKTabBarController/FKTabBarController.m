@@ -8,6 +8,8 @@
 
 #import "FKTabBarController.h"
 
+static CGFloat const FKTabBarControllerHideSpeed = .3;
+
 @interface UIImage (FKTabBarController)
 + (UIImage *)imageWithColor:(UIColor *)color;
 @end
@@ -101,7 +103,7 @@
 - (id)initWithIcon:(UIImage *)icon
      selectedColor:(UIColor *)selectedColor
    unselectedColor:(UIColor *)unselectedColor
-             badgeLabel:(UILabel *)badgeLabel
+        badgeLabel:(UILabel *)badgeLabel
 {
     if ((self = [self init])) {
         _icon = icon;
@@ -126,6 +128,7 @@
 @end
 
 @interface FKTabBar ()
+@property (nonatomic) BOOL isRunningAnimation;
 @property (nonatomic, strong) NSArray *buttons;
 @property (nonatomic) FKTabBarController *delegate;
 @end
@@ -214,6 +217,48 @@
         button.frame = CGRectMake(0 + width*i, 0, width, height);
     }
 }
+
+- (void)setHidden:(BOOL)hidden
+{
+    [self setHidden:hidden animated:NO];
+}
+
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated
+{
+    if (self.hidden == hidden || self.isRunningAnimation) {
+        return;
+    }
+    CGRect showFrame = self.frame;
+    CGRect hideFrame = showFrame;
+    hideFrame.origin.y = [[UIScreen mainScreen] bounds].size.height;
+    
+    CGRect before = hidden?showFrame:hideFrame;
+    CGRect after  = hidden?hideFrame:showFrame;
+    
+    if (!hidden) {
+        [super setHidden:hidden];
+        self.frame = hideFrame;
+    }
+    
+    if (animated) {
+        self.isRunningAnimation = YES;
+        [UIView animateWithDuration:FKTabBarControllerHideSpeed
+                         animations:^{
+                             self.frame = after;
+                         }
+                         completion:^(BOOL finished) {
+                             self.isRunningAnimation = NO;
+                             if (hidden) {
+                                 [super setHidden:hidden];
+                                 self.frame = before;
+                             }
+                         }];
+    } else {
+        self.frame = showFrame;
+        [super setHidden:hidden];
+    }
+}
+
 @end
 
 @interface FKTabBarController ()
