@@ -52,6 +52,7 @@
 - (id)initWithFrame:(CGRect)frame badgeLabel:(UILabel *)badgeLabel
 {
     if ((self = [super initWithFrame:frame])) {
+        self.adjustsImageWhenHighlighted = NO;
         _badgeLabel = badgeLabel;
         [self addSubview:self.badgeLabel];
     }
@@ -150,7 +151,10 @@
         [button setImage:item.icon forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageWithColor:item.unselectedColor] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateSelected];
+        [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateHighlighted];
         [button addTarget:self action:@selector(push:) forControlEvents:UIControlEventTouchDown];
+        [button addTarget:self action:@selector(switchButtons) forControlEvents:UIControlEventTouchUpInside];
+        [button addTarget:self action:@selector(switchButtons) forControlEvents:UIControlEventTouchUpOutside];
         [self addSubview:button];
         [buttons addObject:button];
         item.delegate = button;
@@ -167,7 +171,6 @@
         _selectedIndex = selectedIndex;
         [self.delegate switchViewControllers];
     }
-    [self switchButtons];
 }
 
 - (FKTabBarItem *)selectedItem
@@ -186,6 +189,8 @@
 
 - (void)push:(id)sender
 {
+    [self deselectAllButtons];
+    
     NSInteger index = 0;
     for (int i=0; i<[self.buttons count]; i++) {
         UIButton *button = [self.buttons objectAtIndex:i];
@@ -194,6 +199,13 @@
         }
     }
     self.selectedIndex = index;
+}
+
+- (void)deselectAllButtons
+{
+    for (UIButton *button in self.buttons) {
+        button.selected = NO;
+    }
 }
 
 - (void)switchButtons
