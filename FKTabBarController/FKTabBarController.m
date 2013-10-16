@@ -75,7 +75,7 @@
     }
     self.badgeLabel.center = (CGPoint) {
         .x = CGRectGetWidth(self.bounds)/2 +15.,
-        .y = CGRectGetHeight(self.bounds)/2 -10.
+        .y = CGRectGetHeight(self.bounds)/2 -7.
     };
 }
 
