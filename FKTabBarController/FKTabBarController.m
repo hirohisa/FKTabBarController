@@ -151,7 +151,7 @@
         [button setImage:item.icon forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageWithColor:item.unselectedColor] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateSelected];
-        [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateHighlighted];
+        [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateSelected | UIControlStateHighlighted];
         [button addTarget:self action:@selector(push:) forControlEvents:UIControlEventTouchDown];
         [self addSubview:button];
         [buttons addObject:button];
