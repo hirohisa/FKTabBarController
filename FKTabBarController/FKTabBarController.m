@@ -311,6 +311,9 @@
         if ([self respondsToSelector:@selector(addChildViewController:)]) {
             [self addChildViewController:self.selectedViewController];
         }
+        if ([self.selectedViewController respondsToSelector:@selector(didMoveToParentViewController:)]) {
+            [self.selectedViewController didMoveToParentViewController:self];
+        }
     }
     [self.view insertSubview:self.selectedViewController.view belowSubview:self.tabBar];
 }
