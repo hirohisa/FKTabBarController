@@ -26,6 +26,54 @@
 }
 @end
 
+@interface UIView (FKTabBarController)
+- (BOOL)validateCanScrollToTop;
+- (UIScrollView *)findEnabledScrollToTopScrollView;
+@end
+
+@implementation UIView (FKTabBarController)
+
+- (BOOL)validateCanScrollToTop
+{
+    if ([[self class] isSubclassOfClass:[UIScrollView class]] &&
+        [(UIScrollView *)self scrollsToTop]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (UIScrollView *)findEnabledScrollToTopScrollView
+{
+    if ([self validateCanScrollToTop]) {
+        return (UIScrollView *)self;
+    }
+    for (UIView *subview in self.subviews) {
+        id view = [subview findEnabledScrollToTopScrollView];
+        if (view) {
+            return view;
+        }
+    }
+    return nil;
+}
+
+@end
+
+@interface UIViewController (FKTabBarController)
+- (void)scrollToTop;
+@end
+
+@implementation UIViewController (FKTabBarController)
+
+- (void)scrollToTop
+{
+    UIScrollView *scrollView = [self.view findEnabledScrollToTopScrollView];
+    if (scrollView) {
+        [scrollView setContentOffset:CGPointZero animated:YES];
+    }
+}
+
+@end
+
 @interface UINavigationController (FKTabBarController)
 - (void)setTabBarController:(UIViewController*)viewController;
 @end
@@ -283,7 +331,12 @@
 - (void)reselect:(BOOL)animated
 {
     if ([[self.selectedViewController class] isSubclassOfClass:[UINavigationController class]]) {
-        [(UINavigationController *)self.selectedViewController popToRootViewControllerAnimated:animated];
+        UINavigationController *navigationController = (UINavigationController *)self.selectedViewController;
+        if ([navigationController.visibleViewController isEqual:navigationController.topViewController]) {
+            [navigationController.visibleViewController scrollToTop];
+        } else {
+            [navigationController popToRootViewControllerAnimated:animated];
+        }
     }
 }
 
