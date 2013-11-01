@@ -332,10 +332,10 @@
 {
     if ([[self.selectedViewController class] isSubclassOfClass:[UINavigationController class]]) {
         UINavigationController *navigationController = (UINavigationController *)self.selectedViewController;
-        if ([navigationController.visibleViewController isEqual:navigationController.topViewController]) {
-            [navigationController.visibleViewController scrollToTop];
-        } else {
+        if ([navigationController.viewControllers count] > 1) {
             [navigationController popToRootViewControllerAnimated:animated];
+        } else {
+            [navigationController.visibleViewController scrollToTop];
         }
     }
 }
