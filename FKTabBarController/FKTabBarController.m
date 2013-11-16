@@ -189,6 +189,11 @@
     return self;
 }
 
+- (BOOL)_isTranslucent
+{
+    return NO;
+}
+
 - (void)setItems:(NSArray *)items
 {
     _items = items;

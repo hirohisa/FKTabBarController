@@ -64,7 +64,17 @@
 {
     UINavigationController *navigationController = [[UINavigationController alloc]
             initWithRootViewController:[[DemoViewController alloc]initWithNibName:nil bundle:nil]];
-    navigationController.navigationBar.tintColor = color;
+    NSInteger majorVersion = [[[UIDevice currentDevice] systemVersion] integerValue];
+    switch (majorVersion) {
+        case 5:
+        case 6:
+            navigationController.navigationBar.tintColor = color;
+            break;
+
+        default:
+            navigationController.navigationBar.backgroundColor = color;
+            break;
+    }
 
     return navigationController;
 }
