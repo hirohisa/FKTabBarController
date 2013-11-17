@@ -14,18 +14,18 @@
 
 @interface FKTabBarItem : NSObject
 @property (nonatomic, readonly) UIImage *icon;
+@property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) UIColor *selectedColor;
-@property (nonatomic, readonly) UIColor *unselectedColor;
-@property (nonatomic, readonly) UILabel *badgeLabel;
-@property (nonatomic) NSString *badgeValue;
-- (id)initWithIcon:(UIImage *)icon
-     selectedColor:(UIColor *)selectedColor
-   unselectedColor:(UIColor *)unselectedColord;
+@property (nonatomic, strong) NSString *badgeValue;
 
-- (id)initWithIcon:(UIImage *)icon
-     selectedColor:(UIColor *)selectedColor
-   unselectedColor:(UIColor *)unselectedColor
-        badgeLabel:(UILabel *)badgeLabel;
+- (id)initWithTitle:(NSString *)title
+               icon:(UIImage *)icon
+      selectedColor:(UIColor *)selectedColor;
+
+- (id)initWithTitle:(NSString *)title
+               icon:(UIImage *)icon
+      selectedColor:(UIColor *)selectedColor
+         badgeLabel:(UILabel *)badgeLabel;
 @end
 
 @interface FKTabBar : UIView
@@ -37,6 +37,7 @@
 @interface FKTabBarController : UIViewController
 @property (nonatomic, strong) NSArray *viewControllers;
 @property (nonatomic, readonly) FKTabBar *tabBar;
+@property (nonatomic) NSInteger selectedIndex;
 @property (nonatomic, readonly) UIViewController *selectedViewController;
 - (void)switchViewControllers;
 @end

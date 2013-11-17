@@ -43,6 +43,10 @@
 {
     id demo = [[DemoViewController alloc]initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:demo animated:YES];
+    UITabBarController *tabBarController = self.navigationController.tabBarController;
+
+    UITabBarItem *tabBarItem = [tabBarController.tabBar.items objectAtIndex:tabBarController.selectedIndex];
+    tabBarItem.badgeValue = [NSString stringWithFormat:@"%d", [self.navigationController.viewControllers count]];
 }
 
 @end

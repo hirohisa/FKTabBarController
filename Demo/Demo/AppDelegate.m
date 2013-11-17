@@ -11,13 +11,18 @@
 #import "DemoViewController.h"
 
 @interface UIImage (Demo)
-+ (UIImage *)imageWithColor:(UIColor *)color;
++ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
 @end
 
 @implementation UIImage (Demo)
-+ (UIImage *)imageWithColor:(UIColor *)color
++ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size
 {
-    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    CGRect rect = (CGRect) {
+        .origin.x = 0.,
+        .origin.y = 0.,
+        .size.width = size.width,
+        .size.height = size.height
+    };
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetFillColorWithColor(context, [color CGColor]);
@@ -35,16 +40,16 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
-    self.window.rootViewController = [self makeSampleTabBarController];
+    self.window.rootViewController = [self rootTabBarController];
     [self.window makeKeyAndVisible];
     return YES;
 }
 
-- (DemoTabBarController *)makeSampleTabBarController
+- (UIViewController *)rootTabBarController
 {
     DemoTabBarController *tabBarController = [[DemoTabBarController alloc]initWithNibName:nil bundle:nil];
-    NSMutableArray *viewControllers = @[].mutableCopy;
-    NSMutableArray *items = @[].mutableCopy;
+    NSMutableArray *viewControllers = [@[] mutableCopy];
+    NSMutableArray *items = [@[] mutableCopy];
     NSArray *colors = @[
                         [UIColor blueColor],
                         [UIColor purpleColor],
@@ -52,15 +57,15 @@
                         [UIColor grayColor]
                         ];
     for (int i=0; i<4; i++) {
-        [viewControllers addObject:[self makeSampleNavigationControllerWithColor:[colors objectAtIndex:i]]];
-        [items addObject:[self makeSampleItem]];
+        [viewControllers addObject:[self navigationControllerWithColor:[colors objectAtIndex:i]]];
+        [items addObject:[self sampleItemAtIndex:i]];
     }
-    tabBarController.viewControllers = viewControllers.copy;
-    tabBarController.tabBar.items = items.copy;
-    return (DemoTabBarController *)tabBarController;
+    tabBarController.viewControllers = [viewControllers copy];
+    tabBarController.tabBar.items = [items copy];
+    return tabBarController;
 }
 
-- (UINavigationController *)makeSampleNavigationControllerWithColor:(UIColor *)color
+- (UINavigationController *)navigationControllerWithColor:(UIColor *)color
 {
     UINavigationController *navigationController = [[UINavigationController alloc]
             initWithRootViewController:[[DemoViewController alloc]initWithNibName:nil bundle:nil]];
@@ -79,12 +84,27 @@
     return navigationController;
 }
 
-- (FKTabBarItem *)makeSampleItem
+- (FKTabBarItem *)sampleItemAtIndex:(NSInteger)index
 {
-    UIImage *icon = [UIImage imageWithColor:[UIColor clearColor]];
-    FKTabBarItem *item = [[FKTabBarItem alloc] initWithIcon:icon
-                                             selectedColor:[UIColor blackColor]
-                                           unselectedColor:[UIColor grayColor]];
+    UIImage *icon;
+    NSString *title;
+    switch (index) {
+        case 0:
+            break;
+        case 1:
+            icon = [UIImage imageWithColor:[UIColor purpleColor] size:CGSizeMake(25., 25)];
+            break;
+        case 2:
+            icon = [UIImage imageWithColor:[UIColor purpleColor] size:CGSizeMake(20., 20)];
+            title = [NSString stringWithFormat:@"title:%d", index];
+            break;
+        case 3:
+            title = [NSString stringWithFormat:@"title:%d", index];
+            break;
+    }
+    FKTabBarItem *item = [[FKTabBarItem alloc] initWithTitle:title
+                                                        icon:icon
+                                               selectedColor:[UIColor greenColor]];
     return item;
 }
 

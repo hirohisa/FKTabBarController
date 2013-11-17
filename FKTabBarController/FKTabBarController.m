@@ -6,6 +6,7 @@
 //  Copyright (c) 2013年 Hirohisa Kawasaki. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "FKTabBarController.h"
 
 @interface UIImage (FKTabBarController)
@@ -90,17 +91,52 @@
 }
 @end
 
+@interface FKTabButtonLabel : UILabel
+@end
+
+@implementation FKTabButtonLabel
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.font = [UIFont systemFontOfSize:12];
+        self.textAlignment = NSTextAlignmentCenter;
+        self.textColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor redColor];
+    }
+    return self;
+}
+
+- (void)sizeToFit
+{
+    [super sizeToFit];
+    CGFloat length = CGRectGetHeight(self.frame) > CGRectGetWidth(self.frame)?CGRectGetHeight(self.frame):CGRectGetWidth(self.frame);
+    self.frame = (CGRect) {
+        .origin.x = CGRectGetMinX(self.frame),
+        .origin.y = CGRectGetMinY(self.frame),
+        .size.width = length,
+        .size.height = length
+    };
+    self.layer.cornerRadius = length/2;
+}
+
+@end
+
 @implementation FKTabButton
 - (id)initWithFrame:(CGRect)frame
 {
     return [self initWithFrame:frame
-                    badgeLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+                    badgeLabel:nil];
 }
 
 - (id)initWithFrame:(CGRect)frame badgeLabel:(UILabel *)badgeLabel
 {
     if ((self = [super initWithFrame:frame])) {
         self.adjustsImageWhenHighlighted = NO;
+        if (!badgeLabel) {
+            badgeLabel = [[FKTabButtonLabel alloc] initWithFrame:CGRectZero];
+        }
         _badgeLabel = badgeLabel;
         [self addSubview:self.badgeLabel];
     }
@@ -111,12 +147,30 @@
 {
     if ([badgeValue isEqual:@"0"]) badgeValue = nil;
     self.badgeLabel.text = badgeValue;
+    [self.badgeLabel sizeToFit];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.badgeLabel.hidden = !(self.badgeLabel.text != nil);
+    if (!CGSizeEqualToSize(self.imageView.frame.size, CGSizeZero)) {
+        self.imageView.center = (CGPoint) {
+            .x = CGRectGetWidth(self.frame)/2,
+            .y = CGRectGetHeight(self.frame)/2
+        };
+        if (!CGSizeEqualToSize(self.titleLabel.frame.size, CGSizeZero)) {
+            self.titleLabel.font = [self.titleLabel.font fontWithSize:9.];
+            self.imageView.center = (CGPoint) {
+                .x = CGRectGetWidth(self.frame)/2,
+                .y = CGRectGetHeight(self.frame)/2 - 5
+            };
+            self.titleLabel.center = (CGPoint) {
+                .x = CGRectGetWidth(self.frame)/2,
+                .y = CGRectGetHeight(self.frame) - CGRectGetHeight(self.titleLabel.frame)/2 - 2
+            };
+        }
+    }
+    self.badgeLabel.hidden = !self.badgeLabel.text;
     if (!self.badgeLabel.hidden &&
         CGRectEqualToRect(self.badgeLabel.bounds, CGRectZero)) {
         [self.badgeLabel sizeToFit];
@@ -131,31 +185,32 @@
 
 @interface FKTabBarItem ()
 @property (nonatomic) id delegate;
+@property (nonatomic, readonly) UILabel *badgeLabel;
 @end
 
 @implementation FKTabBarItem
 
-- (id)initWithIcon:(UIImage *)icon
-     selectedColor:(UIColor *)selectedColor
-   unselectedColor:(UIColor *)unselectedColor
+
+- (id)initWithTitle:(NSString *)title
+               icon:(UIImage *)icon
+      selectedColor:(UIColor *)selectedColor
 {
-    UILabel *badgeLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-    badgeLabel.backgroundColor = [UIColor clearColor];
-    return [self initWithIcon:icon
-                selectedColor:selectedColor
-              unselectedColor:unselectedColor
-                   badgeLabel:badgeLabel];
+    return [self initWithTitle:title
+                          icon:icon
+                 selectedColor:selectedColor
+                    badgeLabel:nil];
 }
 
-- (id)initWithIcon:(UIImage *)icon
-     selectedColor:(UIColor *)selectedColor
-   unselectedColor:(UIColor *)unselectedColor
-             badgeLabel:(UILabel *)badgeLabel
+- (id)initWithTitle:(NSString *)title
+               icon:(UIImage *)icon
+      selectedColor:(UIColor *)selectedColor
+         badgeLabel:(UILabel *)badgeLabel
 {
-    if ((self = [self init])) {
+    self = [self init];
+    if (self) {
+        _title = title;
         _icon = icon;
         _selectedColor = selectedColor;
-        _unselectedColor = unselectedColor;
         _badgeLabel = badgeLabel;
     }
     return self;
@@ -201,10 +256,18 @@
     for (FKTabBarItem *item in items) {
         FKTabButton *button = [[FKTabButton alloc]initWithFrame:CGRectZero
                                                      badgeLabel:item.badgeLabel];
-        [button setImage:item.icon forState:UIControlStateNormal];
-        [button setBackgroundImage:[UIImage imageWithColor:item.unselectedColor] forState:UIControlStateNormal];
-        [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateSelected];
-        [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor] forState:UIControlStateSelected | UIControlStateHighlighted];
+        if (item.title) {
+            [button setTitle:item.title forState:UIControlStateNormal];
+        }
+        if (item.icon) {
+            [button setImage:item.icon forState:UIControlStateNormal];
+        }
+        if (item.selectedColor) {
+            [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor]
+                              forState:UIControlStateSelected];
+            [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor]
+                              forState:UIControlStateSelected|UIControlStateHighlighted];
+        }
         [button addTarget:self action:@selector(push:) forControlEvents:UIControlEventTouchDown];
         [self addSubview:button];
         [buttons addObject:button];
@@ -330,6 +393,16 @@
         }
     }
     [self initialize];
+}
+
+- (NSInteger)selectedIndex
+{
+    return self.tabBar.selectedIndex;
+}
+
+- (void)setSelectedIndex:(NSInteger)selectedIndex
+{
+    self.tabBar.selectedIndex = selectedIndex;
 }
 
 #pragma mark - action

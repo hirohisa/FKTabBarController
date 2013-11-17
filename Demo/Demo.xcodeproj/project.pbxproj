@@ -19,6 +19,7 @@
 		A1A175091747310B00B0261F /* FKTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1A175081747310B00B0261F /* FKTabBarController.m */; };
 		A1A1750C1747312600B0261F /* DemoTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1A1750B1747312600B0261F /* DemoTabBarController.m */; };
 		A1A1750F1747323800B0261F /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1A1750E1747323800B0261F /* DemoViewController.m */; };
+		A1C714B01838F70600EF466A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1C714AF1838F70600EF466A /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		A1A1750B1747312600B0261F /* DemoTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoTabBarController.m; sourceTree = "<group>"; };
 		A1A1750D1747323800B0261F /* DemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewController.h; sourceTree = "<group>"; };
 		A1A1750E1747323800B0261F /* DemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewController.m; sourceTree = "<group>"; };
+		A1C714AF1838F70600EF466A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1C714B01838F70600EF466A /* QuartzCore.framework in Frameworks */,
 				A1A174EA1747306C00B0261F /* UIKit.framework in Frameworks */,
 				A1A174EC1747306C00B0261F /* Foundation.framework in Frameworks */,
 				A1A174EE1747306C00B0261F /* CoreGraphics.framework in Frameworks */,
@@ -78,6 +81,7 @@
 		A1A174E81747306C00B0261F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A1C714AF1838F70600EF466A /* QuartzCore.framework */,
 				A1A174E91747306C00B0261F /* UIKit.framework */,
 				A1A174EB1747306C00B0261F /* Foundation.framework */,
 				A1A174ED1747306C00B0261F /* CoreGraphics.framework */,
