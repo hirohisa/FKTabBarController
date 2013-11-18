@@ -31,6 +31,7 @@ Pod::Spec.new do |s|
 
   s.author       = { "Hirohisa Kawasaki" => "hirohisa.kawasaki@gmail.com" }
   s.platform     = :ios, '5.0'
+  s.frameworks   = 'CoreGraphics', 'QuartzCore'
   s.source       = { :git => "https://github.com/hirohisa/FKTabBarController.git" }
   s.source_files  = 'FKTabBarController'
   s.public_header_files = 'FKTabBarController/*.h'
