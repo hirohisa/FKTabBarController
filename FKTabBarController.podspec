@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "FKTabBarController"
-  s.version      = "1.0.2"
+  s.version      = "1.0.3"
   s.summary      = "FKTabBarController is intended to change the tabbar and items instead of UITabBarController"
   s.homepage     = "https://github.com/hirohisa/FKTabBarController"
   s.license      = 'MIT'
