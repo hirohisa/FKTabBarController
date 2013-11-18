@@ -147,7 +147,9 @@
 {
     if ([badgeValue isEqual:@"0"]) badgeValue = nil;
     self.badgeLabel.text = badgeValue;
-    [self.badgeLabel sizeToFit];
+    if ([[self.badgeLabel class] isSubclassOfClass:[FKTabButtonLabel class]]) {
+        [self.badgeLabel sizeToFit];
+    }
 }
 
 - (void)layoutSubviews
