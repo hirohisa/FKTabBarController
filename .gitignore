@@ -1,3 +1,11 @@
+# regular
 .DS_store
 *xcuserdata
 *.xcworkspacedata
+*Thumbs.db
+*.xcuserstate
+*.xccheckout
+
+# cocoapods
+Pods
+Podfile.lock

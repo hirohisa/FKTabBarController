@@ -251,6 +251,17 @@
     return NO;
 }
 
+- (void)setHidden:(BOOL)hidden
+{
+    [super setHidden:hidden];
+    CGRect frame = self.frame;
+    frame.origin.y = CGRectGetHeight(self.delegate.view.frame);
+    if (!hidden) {
+        frame.origin.y -= CGRectGetHeight(self.frame);
+    }
+    self.frame = frame;
+}
+
 - (void)setItems:(NSArray *)items
 {
     _items = items;
