@@ -248,7 +248,7 @@
 
 - (BOOL)_isTranslucent
 {
-    return NO;
+    return YES;
 }
 
 - (void)setHidden:(BOOL)hidden
