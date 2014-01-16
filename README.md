@@ -10,7 +10,7 @@ FKTabBarController is intended to change the tabbar and items instead of UITabBa
 
 ```objective-c
 FKTabBarController *tabBarController = [[FKTabBarController alloc]initWithNibName:nil bundle:nil];
-NSMutableArray *viewControllers = @[].mutableCopy;
+NSMutableArray *viewControllers = [@[] mutableCopy];
 NSMutableArray *items = @[].mutableCopy;
 for (int i=0; i<4; i++) {
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:[[DemoViewController alloc]initWithNibName:nil bundle:nil]];

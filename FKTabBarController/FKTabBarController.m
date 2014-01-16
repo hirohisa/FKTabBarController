@@ -265,7 +265,7 @@
 - (void)setItems:(NSArray *)items
 {
     _items = items;
-    NSMutableArray *buttons = @[].mutableCopy;
+    NSMutableArray *buttons = [@[] mutableCopy];
     for (FKTabBarItem *item in items) {
         FKTabButton *button = [[FKTabButton alloc]initWithFrame:CGRectZero
                                                      badgeLabel:item.badgeLabel];
