@@ -404,17 +404,17 @@
 
 - (void)_hideBarWithTransition:(int)arg1 isExplicit:(BOOL)arg2;
 {
-    NSLog(@"%d %d", arg1, arg2);
+    self.tabBar.hidden = YES;
 }
 
 - (void)showBarWithTransition:(int)arg1
 {
-    NSLog(@"%d", arg1);
+    self.tabBar.hidden = NO;
 }
 
 - (void)_showBarWithTransition:(int)arg1 isExplicit:(BOOL)arg2
 {
-    NSLog(@"%d %d", arg1, arg2);
+    self.tabBar.hidden = NO;
 }
 
 - (void)setViewControllers:(NSArray *)viewControllers

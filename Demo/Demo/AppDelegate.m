@@ -47,7 +47,33 @@
 
 - (UIViewController *)rootTabBarController
 {
-    DemoTabBarController *tabBarController = [[DemoTabBarController alloc]initWithNibName:nil bundle:nil];
+    // FKTabBarController
+    return [self generateFKTabBarController];
+    // UITabBarController
+    //return [self generateUITabBarController];
+}
+
+- (UITabBarController *)generateUITabBarController
+{
+    UITabBarController *tabBarController = [[UITabBarController alloc]initWithNibName:nil bundle:nil];
+    NSMutableArray *viewControllers = [@[] mutableCopy];
+    NSArray *colors = @[
+                        [UIColor blueColor],
+                        [UIColor purpleColor],
+                        [UIColor redColor],
+                        [UIColor grayColor]
+                        ];
+    for (int i=0; i<4; i++) {
+        [viewControllers addObject:[self navigationControllerWithColor:[colors objectAtIndex:i]]];
+    }
+    tabBarController.viewControllers = [viewControllers copy];
+    return tabBarController;
+}
+
+- (FKTabBarController *)generateFKTabBarController
+{
+    UITabBarController *tabBarController = (UITabBarController *)[[DemoTabBarController alloc]initWithNibName:nil bundle:nil];
+
     NSMutableArray *viewControllers = [@[] mutableCopy];
     NSMutableArray *items = [@[] mutableCopy];
     NSArray *colors = @[
