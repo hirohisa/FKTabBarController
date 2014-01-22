@@ -47,6 +47,7 @@
 
     UITabBarItem *tabBarItem = tabBarController.tabBar.items[tabBarController.selectedIndex];
     tabBarItem.badgeValue = [@([self.navigationController.viewControllers count]) stringValue];
+    self.hidesBottomBarWhenPushed = ([self.navigationController.viewControllers count] > 2);
 }
 
 @end

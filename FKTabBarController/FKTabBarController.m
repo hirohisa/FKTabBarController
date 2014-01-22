@@ -394,7 +394,27 @@
 #pragma mark - setter/getter
 - (UIViewController *)selectedViewController
 {
-    return [self.viewControllers objectAtIndex:self.tabBar.selectedIndex];
+    return self.viewControllers[self.tabBar.selectedIndex];
+}
+
+- (id)_selectedViewControllerInTabBar
+{
+    return self.selectedViewController;
+}
+
+- (void)_hideBarWithTransition:(int)arg1 isExplicit:(BOOL)arg2;
+{
+    NSLog(@"%d %d", arg1, arg2);
+}
+
+- (void)showBarWithTransition:(int)arg1
+{
+    NSLog(@"%d", arg1);
+}
+
+- (void)_showBarWithTransition:(int)arg1 isExplicit:(BOOL)arg2
+{
+    NSLog(@"%d %d", arg1, arg2);
 }
 
 - (void)setViewControllers:(NSArray *)viewControllers
