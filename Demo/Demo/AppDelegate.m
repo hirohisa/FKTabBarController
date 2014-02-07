@@ -70,7 +70,7 @@
     return tabBarController;
 }
 
-- (FKTabBarController *)generateFKTabBarController
+- (UITabBarController *)generateFKTabBarController
 {
     UITabBarController *tabBarController = (UITabBarController *)[[DemoTabBarController alloc]initWithNibName:nil bundle:nil];
 

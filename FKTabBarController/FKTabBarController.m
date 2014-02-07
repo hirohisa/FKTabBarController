@@ -6,8 +6,20 @@
 //  Copyright (c) 2013年 Hirohisa Kawasaki. All rights reserved.
 //
 
+#import <objc/runtime.h>
 #import <QuartzCore/QuartzCore.h>
 #import "FKTabBarController.h"
+
+void FKSwizzleInstanceMethod(Class c, SEL original, SEL alternative)
+{
+    Method orgMethod = class_getInstanceMethod(c, original);
+    Method altMethod = class_getInstanceMethod(c, alternative);
+    if(class_addMethod(c, original, method_getImplementation(altMethod), method_getTypeEncoding(altMethod))) {
+        class_replaceMethod(c, alternative, method_getImplementation(orgMethod), method_getTypeEncoding(orgMethod));
+    } else {
+        method_exchangeImplementations(orgMethod, altMethod);
+    }
+}
 
 @interface UIImage (FKTabBarController)
 + (UIImage *)imageWithColor:(UIColor *)color;
@@ -76,10 +88,15 @@
 @end
 
 @interface UINavigationController (FKTabBarController)
+
+@property (nonatomic, assign) id<UINavigationControllerDelegate> FKDelegate;
+
 - (void)setTabBarController:(UIViewController*)viewController;
+
 @end
 
 @implementation UINavigationController (FKTabBarController)
+
 - (void)setTabBarController:(UIViewController*)viewController
 {
     [self setValue:viewController forKey:@"_parentViewController"];
@@ -89,6 +106,33 @@
 {
     return (UITabBarController *)self.parentViewController;
 }
+
+static const char *FKTabBarDelegateKey = "FKTabBarDelegateKey";
+
++ (void)load
+{
+    FKSwizzleInstanceMethod([self class], @selector(setDelegate:), @selector(_setDelegate:));
+}
+
+- (void)_setDelegate:(id<UINavigationControllerDelegate>)delegate
+{
+    if ([[delegate class] isSubclassOfClass:[FKTabBarController class]]) {
+        [self _setDelegate:delegate];
+    } else {
+        self.FKDelegate = delegate;
+    }
+}
+
+- (id<UINavigationControllerDelegate>)FKDelegate
+{
+    return objc_getAssociatedObject(self, FKTabBarDelegateKey);
+}
+
+- (void)setFKDelegate:(id<UINavigationControllerDelegate>)FKDelegate
+{
+    objc_setAssociatedObject(self, FKTabBarDelegateKey, FKDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
 
 @interface FKTabButtonLabel : UILabel
@@ -191,7 +235,6 @@
 @end
 
 @implementation FKTabBarItem
-
 
 - (id)initWithTitle:(NSString *)title
                icon:(UIImage *)icon
@@ -494,10 +537,61 @@
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     _lock = YES;
+    if (navigationController.FKDelegate &&
+        [navigationController.FKDelegate respondsToSelector:@selector(navigationController:willShowViewController:animated:)]) {
+        [navigationController.FKDelegate navigationController:navigationController willShowViewController:viewController animated:animated];
+    }
 }
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     _lock = NO;
+    if (navigationController.FKDelegate &&
+        [navigationController.FKDelegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
+        [navigationController.FKDelegate navigationController:navigationController didShowViewController:viewController animated:animated];
+    }
+}
+
+- (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController *)navigationController
+{
+    if (navigationController.FKDelegate &&
+        [navigationController.FKDelegate respondsToSelector:@selector(navigationControllerSupportedInterfaceOrientations:)]) {
+        return [navigationController.FKDelegate navigationControllerSupportedInterfaceOrientations:navigationController];
+    }
+    return -1;
+}
+
+- (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController *)navigationController
+{
+    if (navigationController.FKDelegate &&
+        [navigationController.FKDelegate respondsToSelector:@selector(navigationControllerPreferredInterfaceOrientationForPresentation:)]) {
+        return [navigationController.FKDelegate navigationControllerPreferredInterfaceOrientationForPresentation:navigationController];
+    }
+    return -1;
+}
+
+- (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
+                          interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>) animationController
+{
+    if (navigationController.FKDelegate &&
+        [navigationController.FKDelegate respondsToSelector:@selector(navigationController:interactionControllerForAnimationController:)]) {
+        return [navigationController.FKDelegate navigationController:navigationController interactionControllerForAnimationController:animationController];
+    }
+    return nil;
+}
+
+- (id <UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                   animationControllerForOperation:(UINavigationControllerOperation)operation
+                                                fromViewController:(UIViewController *)fromVC
+                                                  toViewController:(UIViewController *)toVC
+{
+    if (navigationController.FKDelegate &&
+        [navigationController.FKDelegate respondsToSelector:@selector(navigationController:animationControllerForOperation:fromViewController:toViewController:)]) {
+        return [navigationController.FKDelegate navigationController:navigationController
+                                     animationControllerForOperation:operation
+                                                  fromViewController:fromVC
+                                                    toViewController:toVC];
+    }
+    return nil;
 }
 
 @end
