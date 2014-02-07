@@ -356,7 +356,9 @@
 }
 @end
 
-@interface FKTabBarController ()
+@interface FKTabBarController () <UINavigationControllerDelegate> {
+    BOOL _lock;
+}
 @end
 
 @implementation FKTabBarController
@@ -422,7 +424,9 @@
     _viewControllers = viewControllers;
     for (UIViewController *viewController in viewControllers) {
         if ([[viewController class] isSubclassOfClass:[UINavigationController class]]) {
-            [(UINavigationController *)viewController setTabBarController:self];
+            UINavigationController *navigationController = (UINavigationController *)viewController;
+            [navigationController setTabBarController:self];
+            navigationController.delegate = self;
         }
     }
     [self initialize];
@@ -441,6 +445,9 @@
 #pragma mark - action
 - (void)reselect:(BOOL)animated
 {
+    if (_lock) {
+        return;
+    }
     if ([[self.selectedViewController class] isSubclassOfClass:[UINavigationController class]]) {
         UINavigationController *navigationController = (UINavigationController *)self.selectedViewController;
         if ([navigationController.viewControllers count] > 1) {
@@ -481,4 +488,16 @@
     }
     [self.view insertSubview:self.selectedViewController.view belowSubview:self.tabBar];
 }
+
+#pragma mark - UINavigationControllerDelegate
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    _lock = YES;
+}
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    _lock = NO;
+}
+
 @end
