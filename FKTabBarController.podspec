@@ -1,4 +1,4 @@
-version = "1.0.3pre"
+version = "1.0.3"
 Pod::Spec.new do |s|
   s.name         = "FKTabBarController"
   s.version      = version
@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
   s.author       = { "Hirohisa Kawasaki" => "hirohisa.kawasaki@gmail.com" }
   s.platform     = :ios, '5.0'
   s.frameworks   = 'CoreGraphics', 'QuartzCore'
-  s.source       = { :git => "https://github.com/hirohisa/FKTabBarController.git" }
+  s.source       = { :git => "https://github.com/hirohisa/FKTabBarController.git", :tag => "#{s.version}" }
   s.source_files  = 'FKTabBarController'
   s.public_header_files = 'FKTabBarController/*.h'
   s.requires_arc = true
