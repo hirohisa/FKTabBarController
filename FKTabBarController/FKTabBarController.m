@@ -130,7 +130,7 @@ static const char *FKTabBarDelegateKey = "FKTabBarDelegateKey";
 
 - (void)setFKDelegate:(id<UINavigationControllerDelegate>)FKDelegate
 {
-    objc_setAssociatedObject(self, FKTabBarDelegateKey, FKDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, FKTabBarDelegateKey, FKDelegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
 @end
