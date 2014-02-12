@@ -116,11 +116,12 @@ static const char *FKTabBarDelegateKey = "FKTabBarDelegateKey";
 
 - (void)_setDelegate:(id<UINavigationControllerDelegate>)delegate
 {
-    if ([[delegate class] isSubclassOfClass:[FKTabBarController class]]) {
-        [self _setDelegate:delegate];
-    } else {
-        self.FKDelegate = delegate;
+    if (self.delegate) {
+        if ([[delegate class] isSubclassOfClass:[FKTabBarController class]]) {
+            self.FKDelegate = self.delegate;
+        }
     }
+    [self _setDelegate:delegate];
 }
 
 - (id<UINavigationControllerDelegate>)FKDelegate
