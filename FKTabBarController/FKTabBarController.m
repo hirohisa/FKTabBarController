@@ -107,7 +107,7 @@ void FKSwizzleInstanceMethod(Class c, SEL original, SEL alternative)
     return (UITabBarController *)self.parentViewController;
 }
 
-static const char *FKTabBarDelegateKey = "FKTabBarDelegateKey";
+static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKey";
 
 + (void)load
 {
@@ -126,12 +126,12 @@ static const char *FKTabBarDelegateKey = "FKTabBarDelegateKey";
 
 - (id<UINavigationControllerDelegate>)FKDelegate
 {
-    return objc_getAssociatedObject(self, FKTabBarDelegateKey);
+    return objc_getAssociatedObject(self, FKTabBarControllerDelegateKey);
 }
 
 - (void)setFKDelegate:(id<UINavigationControllerDelegate>)FKDelegate
 {
-    objc_setAssociatedObject(self, FKTabBarDelegateKey, FKDelegate, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, FKTabBarControllerDelegateKey, FKDelegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
 @end
