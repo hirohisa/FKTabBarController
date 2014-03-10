@@ -111,17 +111,17 @@ static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKe
 
 + (void)load
 {
-    FKSwizzleInstanceMethod([self class], @selector(setDelegate:), @selector(_setDelegate:));
+    FKSwizzleInstanceMethod([self class], @selector(setDelegate:), @selector(fk_setDelegate:));
 }
 
-- (void)_setDelegate:(id<UINavigationControllerDelegate>)delegate
+- (void)fk_setDelegate:(id<UINavigationControllerDelegate>)delegate
 {
     if (self.delegate) {
         if ([[delegate class] isSubclassOfClass:[FKTabBarController class]]) {
             self.FKDelegate = self.delegate;
         }
     }
-    [self _setDelegate:delegate];
+    [self fk_setDelegate:delegate];
 }
 
 - (id<UINavigationControllerDelegate>)FKDelegate
