@@ -1,14 +1,40 @@
 FKTabBarController
 ==================
-FKTabBarController is intended to change the tabbar and items instead of UITabBarController
+FKTabBarController is intended to change the tabbar and items instead of UITabBarController.
+
+- `import file` and `cast` are not necessary, except when the initialization.
+- Change `TabBar` and `TabBarItem`
 
 ![FKTabBarController screenshot](https://raw.github.com/chion/FKTabBarController/master/Demo/screenshot.png "Screenshot")
 
-### Example Usage
 
-#### Setting
+Installation
+----------
 
-```objective-c
+There are two ways to use this in your project:
+
+- Copy `FKTabBarController/*.{h.m}` into your project
+
+- Install with CocoaPods to write Podfile
+```ruby
+platform :ios
+pod 'FKTabBarController',  '~> 1.0.4'
+```
+
+Usage
+----------
+
+- Setting TabBarController, TabBar and TabBarItem
+
+
+Example
+----------
+
+### Setting TabBarController, TabBar and TabBarItem
+
+```objc
+
+
 FKTabBarController *tabBarController = [[FKTabBarController alloc]initWithNibName:nil bundle:nil];
 NSMutableArray *viewControllers = [@[] mutableCopy];
 NSMutableArray *items = @[].mutableCopy;
@@ -22,20 +48,29 @@ for (int i=0; i<4; i++) {
 }
 tabBarController.viewController = viewController;
 tabBarController.tabBar.items = items;
+
 ```
 
-#### Using
+### Using TabBarController, TabBar and TabBarItem
 
-if use, need not to import file and cast.
-use UITabBarController and UITabBarItem
+If use, need not to import file and cast.
 
-```objective-c
+```objc
+
+
 UITabBarController *tabBarController = self.navigationController.tabBarController;
 
 UITabBarItem *tabBarItem = tabBarController.tabBar.items[tabBarController.selectedIndex];
 tabBarItem.badgeValue = [@([self.navigationController.viewControllers count]) stringValue];
+
 ```
 
-### License
+Feature
+----------
+
+- Mimic the UITabBarController
+- Can use the existing methods
+
+## License
 
 FKTabBarController is available under the MIT license.
