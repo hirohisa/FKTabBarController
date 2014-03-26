@@ -81,7 +81,7 @@ void FKSwizzleInstanceMethod(Class c, SEL original, SEL alternative)
 {
     UIScrollView *scrollView = [self.view findEnabledscrollsToTopScrollView];
     if (scrollView) {
-        [scrollView setContentOffset:CGPointZero animated:YES];
+        [scrollView setContentOffset:CGPointMake(-scrollView.contentInset.left, -scrollView.contentInset.top) animated:YES];
     }
 }
 
