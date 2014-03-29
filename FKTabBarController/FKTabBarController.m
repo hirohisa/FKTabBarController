@@ -81,7 +81,7 @@ void FKSwizzleInstanceMethod(Class c, SEL original, SEL alternative)
 {
     UIScrollView *scrollView = [self.view findEnabledscrollsToTopScrollView];
     if (scrollView) {
-        [scrollView setContentOffset:CGPointZero animated:YES];
+        [scrollView setContentOffset:CGPointMake(-scrollView.contentInset.left, -scrollView.contentInset.top) animated:YES];
     }
 }
 
@@ -111,17 +111,17 @@ static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKe
 
 + (void)load
 {
-    FKSwizzleInstanceMethod([self class], @selector(setDelegate:), @selector(_setDelegate:));
+    FKSwizzleInstanceMethod([self class], @selector(setDelegate:), @selector(fk_setDelegate:));
 }
 
-- (void)_setDelegate:(id<UINavigationControllerDelegate>)delegate
+- (void)fk_setDelegate:(id<UINavigationControllerDelegate>)delegate
 {
     if (self.delegate) {
         if ([[delegate class] isSubclassOfClass:[FKTabBarController class]]) {
             self.FKDelegate = self.delegate;
         }
     }
-    [self _setDelegate:delegate];
+    [self fk_setDelegate:delegate];
 }
 
 - (id<UINavigationControllerDelegate>)FKDelegate
