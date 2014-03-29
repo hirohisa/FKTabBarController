@@ -16,6 +16,8 @@
 @property (nonatomic, readonly) UIImage *icon;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) UIColor *selectedColor;
+@property (nonatomic, readonly) UIColor *textColor;
+@property (nonatomic, readonly) UIColor *selectedTextColor;
 @property (nonatomic, strong) NSString *badgeValue;
 
 - (id)initWithTitle:(NSString *)title
@@ -25,6 +27,8 @@
 - (id)initWithTitle:(NSString *)title
                icon:(UIImage *)icon
       selectedColor:(UIColor *)selectedColor
+          textColor:(UIColor *)textColor
+  selectedTextColor:(UIColor *)selectedTextColor
          badgeLabel:(UILabel *)badgeLabel;
 @end
 

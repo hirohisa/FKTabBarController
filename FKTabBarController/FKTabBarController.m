@@ -244,12 +244,16 @@ static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKe
     return [self initWithTitle:title
                           icon:icon
                  selectedColor:selectedColor
+                     textColor:nil
+             selectedTextColor:nil
                     badgeLabel:nil];
 }
 
 - (id)initWithTitle:(NSString *)title
                icon:(UIImage *)icon
       selectedColor:(UIColor *)selectedColor
+          textColor:(UIColor *)textColor
+  selectedTextColor:(UIColor *)selectedTextColor
          badgeLabel:(UILabel *)badgeLabel
 {
     self = [self init];
@@ -257,6 +261,8 @@ static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKe
         _title = title;
         _icon = icon;
         _selectedColor = selectedColor;
+        _textColor = textColor;
+        _selectedTextColor = selectedTextColor;
         _badgeLabel = badgeLabel;
     }
     return self;
@@ -324,6 +330,15 @@ static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKe
                               forState:UIControlStateSelected];
             [button setBackgroundImage:[UIImage imageWithColor:item.selectedColor]
                               forState:UIControlStateSelected|UIControlStateHighlighted];
+        }
+        if (item.textColor) {
+            [button setTitleColor:item.textColor forState:UIControlStateNormal];
+        }
+        if (item.selectedTextColor) {
+            [button setTitleColor:item.selectedTextColor
+                         forState:UIControlStateSelected];
+            [button setTitleColor:item.selectedTextColor
+                         forState:UIControlStateSelected|UIControlStateHighlighted];
         }
         [button addTarget:self action:@selector(push:) forControlEvents:UIControlEventTouchDown];
         [self addSubview:button];

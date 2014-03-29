@@ -128,9 +128,23 @@
             title = [NSString stringWithFormat:@"title:%d", index];
             break;
     }
-    FKTabBarItem *item = [[FKTabBarItem alloc] initWithTitle:title
-                                                        icon:icon
-                                               selectedColor:[UIColor greenColor]];
+
+    FKTabBarItem *item;
+    switch (index) {
+        case 3:
+            item = [[FKTabBarItem alloc] initWithTitle:title
+                                                  icon:icon
+                                         selectedColor:[UIColor greenColor]
+                                             textColor:[UIColor whiteColor]
+                                     selectedTextColor:[UIColor blackColor] badgeLabel:nil];
+            break;
+
+        default:
+            item = [[FKTabBarItem alloc] initWithTitle:title
+                                                  icon:icon
+                                         selectedColor:[UIColor greenColor]];
+            break;
+    }
     return item;
 }
 
