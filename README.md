@@ -41,10 +41,10 @@ NSMutableArray *items = @[].mutableCopy;
 for (int i=0; i<4; i++) {
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:[[DemoViewController alloc]initWithNibName:nil bundle:nil]];
     [viewControllers addObject:nc];
-    UIImage *icon = [UIImage imageWithColor:[UIColor clearColor]];
-    [items addObject:[[FKTabBarItem alloc] initWithIcon:icon
-                                          selectedColor:[UIColor blackColor]
-                                        unselectedColor:[UIColor grayColor]]];
+    item = [[FKTabBarItem alloc] initWithTitle:title
+                                          icon:icon
+                                 selectedColor:[UIColor greenColor]];
+    [items addObject:item];
 }
 tabBarController.viewController = viewController;
 tabBarController.tabBar.items = items;
