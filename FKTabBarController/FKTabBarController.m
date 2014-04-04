@@ -149,6 +149,7 @@ static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKe
         self.textAlignment = NSTextAlignmentCenter;
         self.textColor = [UIColor whiteColor];
         self.backgroundColor = [UIColor redColor];
+        self.clipsToBounds = YES;
     }
     return self;
 }
