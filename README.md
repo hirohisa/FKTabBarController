@@ -65,12 +65,6 @@ tabBarItem.badgeValue = [@([self.navigationController.viewControllers count]) st
 
 ```
 
-Feature
-----------
-
-- Mimic the UITabBarController
-- Can use the existing methods
-
 ## License
 
 FKTabBarController is available under the MIT license.
