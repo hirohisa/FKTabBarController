@@ -26,18 +26,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationController.delegate = self;
     self.title = [NSString stringWithFormat:@"Demo:%d", [self.navigationController.viewControllers count]];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [button setTitle:@"next" forState:UIControlStateNormal];
     [button addTarget:self action:@selector(next:) forControlEvents:UIControlEventTouchUpInside];
     button.frame = CGRectMake(50, 50, 50, 50);
     [self.view addSubview:button];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
 }
 
 - (void)next:(id)sender
