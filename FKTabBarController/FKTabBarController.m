@@ -97,14 +97,16 @@ void FKSwizzleInstanceMethod(Class c, SEL original, SEL alternative)
 
 @implementation UINavigationController (FKTabBarController)
 
+static const char *FKTabBarControllerKey = "FKTabBarControllerKey";
+
 - (void)setTabBarController:(UIViewController*)viewController
 {
-    [self setValue:viewController forKey:@"_parentViewController"];
+    objc_setAssociatedObject(self, FKTabBarControllerKey, viewController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (UITabBarController *)tabBarController
 {
-    return (UITabBarController *)self.parentViewController;
+    return objc_getAssociatedObject(self, FKTabBarControllerKey);
 }
 
 static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKey";
@@ -232,7 +234,7 @@ static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKe
 @end
 
 @interface FKTabBarItem ()
-@property (nonatomic) id delegate;
+@property (nonatomic, assign) id delegate;
 @property (nonatomic, readonly) UILabel *badgeLabel;
 @end
 
