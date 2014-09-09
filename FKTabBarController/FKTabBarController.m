@@ -286,7 +286,7 @@ static const char *FKTabBarControllerDelegateKey = "FKTabBarControllerDelegateKe
 
 @interface FKTabBar ()
 @property (nonatomic, strong) NSArray *buttons;
-@property (nonatomic) FKTabBarController *delegate;
+@property (nonatomic, assign) FKTabBarController *delegate;
 @end
 
 @implementation FKTabBar
